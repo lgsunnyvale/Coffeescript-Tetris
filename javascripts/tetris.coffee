@@ -1,6 +1,6 @@
 class Tetris
     constructor: (@width, @height) ->
-        @array         = (0 for item in [0...@width*@height])
+        @array         = this.array_factory()
         @mid           = Math.floor @width/2
         @wedge         = [@mid, @mid+@width, @mid+@width-1, @mid+@width+1]
         @square        = [@mid, @mid+1, @mid+@width, @mid+@width+1]
@@ -9,6 +9,9 @@ class Tetris
         @tetris_block  = [@wedge, @square, @stick, @twist]
         @current_block_type = this.block_type_factory()
         @current_block = this.current_block_factory()
+
+    array_factory: ->
+        @array = (0 for item in [0...@width*@height])
 
     block_type_factory: ->
         Math.floor(Math.random() * @tetris_block.length)
@@ -21,6 +24,9 @@ class Tetris
 
     clean: ->
         @array = (0 for item in [0...@width*@height])
+        # to be removed, just for test
+        for jtem in [this.width*this.height-4 ... this.width*this.height]
+            this.array[jtem] = 2
 
     block_move_down:  ->
         @current_block = ((item + this.width) for item in @current_block)
@@ -37,7 +43,7 @@ class Tetris
 
     touch_left_wall: ->
         for item in @current_block
-            if (item % @width == 1)
+            if ((item % @width) == 1)
                 result = true
             else
                 result = false
@@ -69,10 +75,16 @@ class Tetris
                 result = true
             else
                 result = false
+        result
+
 
 $ ->
 
     t = new Tetris(5,5)
+
+    # to be removed, just for test
+    for jtem in [t.width*t.height-4 ... t.width*t.height]
+        t.array[jtem] = 2
 
     refresh = ->
        row=""
@@ -97,14 +109,15 @@ $ ->
 
     down = ->
         unless t.touch_bottom()
-            t.clean()
-            t.block_move_down()
-            t.show_block()
-            refresh()
-        else
-            t.clean()
-            t.solidify()
-            refresh()
+            unless t.touch_dead_block()
+                t.clean()
+                t.block_move_down()
+                t.show_block()
+                refresh()
+            else
+                t.clean()
+                t.solidify()
+                refresh()
 
     left = ->
         unless t.touch_left_wall()
