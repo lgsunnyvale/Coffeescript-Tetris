@@ -37,7 +37,7 @@ class Tetris
 
     touch_left_wall: ->
         for item in @current_block
-            if (item % @width == 2)
+            if (item % @width == 1)
                 result = true
             else
                 result = false
@@ -59,6 +59,16 @@ class Tetris
                 result = false
         result
 
+    solidify: ->
+        for item in this.current_block
+            @array[item] = 2
+
+    touch_dead_block: ->
+        for item in @current_block
+            if @array[item + @height] == 2
+                result = true
+            else
+                result = false
 
 $ ->
 
@@ -71,7 +81,12 @@ $ ->
            table = table + "<tr>"
            for jtem in [0...t.width]
                n = jtem+item*t.width
-               cell_css = if t.array[n]==1 then 'block' else 'cell'
+               if t.array[n]==1
+                   cell_css = 'block'
+               else if t.array[n] == 2
+                   cell_css = 'dead_block'
+               else
+                   cell_css = 'cell'
                row = row + "<td class=#{cell_css} id=#{n}>#{n}</td>"
            table = table + row + "</tr>"
            row=""
@@ -85,6 +100,10 @@ $ ->
             t.clean()
             t.block_move_down()
             t.show_block()
+            refresh()
+        else
+            t.clean()
+            t.solidify()
             refresh()
 
     left = ->
