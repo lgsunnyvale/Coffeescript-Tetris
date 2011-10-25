@@ -34,6 +34,25 @@ class Tetris
     show_block: ->
         for item in this.current_block
             this.array[item] = 1
+
+    touch_left_wall: ->
+        for item in @current_block
+            if (item % @width == 1)
+                result = true
+            else
+                result = false
+        result
+
+
+    touch_right_wall: ->
+        for item in @current_block
+            if (item % @width == (@width-1))
+                result = true
+            else
+                result = false
+        result
+
+
 $ ->
 
     t = new Tetris(5,10)
@@ -53,22 +72,27 @@ $ ->
     t.show_block()
     refresh()
 
-    drop = ->
+    down = ->
         t.clean()
         t.block_move_down()
         t.show_block()
         refresh()
 
     left = ->
-        t.clean()
-        t.block_move_left()
-        t.show_block()
-        refresh()
+        unless t.touch_left_wall()
+            t.clean()
+            t.block_move_left()
+            t.show_block()
+            refresh()
 
     right = ->
-        t.clean()
-        t.block_move_right()
-        t.show_block()
-        refresh()
+        unless t.touch_right_wall()
+            t.clean()
+            t.block_move_right()
+            t.show_block()
+            refresh()
 
-    $("#config_btn").click drop
+    $("#down_btn").click down
+    $("#left_btn").click left
+    $("#right_btn").click right
+
