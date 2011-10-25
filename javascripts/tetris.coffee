@@ -77,7 +77,6 @@ class Tetris
                 result = false
         result
 
-
 $ ->
 
     t = new Tetris(5,5)
