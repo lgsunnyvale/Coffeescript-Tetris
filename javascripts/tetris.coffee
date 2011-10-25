@@ -37,12 +37,11 @@ class Tetris
 
     touch_left_wall: ->
         for item in @current_block
-            if (item % @width == 1)
+            if (item % @width == 2)
                 result = true
             else
                 result = false
         result
-
 
     touch_right_wall: ->
         for item in @current_block
@@ -52,10 +51,18 @@ class Tetris
                 result = false
         result
 
+    touch_bottom: ->
+        for item in @current_block
+            if item >= (@width * (@height - 1))
+                result = true
+            else
+                result = false
+        result
+
 
 $ ->
 
-    t = new Tetris(5,10)
+    t = new Tetris(5,5)
 
     refresh = ->
        row=""
@@ -64,7 +71,8 @@ $ ->
            table = table + "<tr>"
            for jtem in [0...t.width]
                n = jtem+item*t.width
-               row = row + "<td class=#{if t.array[n]==1 then 'block' else 'cell'} id=#{n}>#{n}</td>"
+               cell_css = if t.array[n]==1 then 'block' else 'cell'
+               row = row + "<td class=#{cell_css} id=#{n}>#{n}</td>"
            table = table + row + "</tr>"
            row=""
        $("#frame").html "<table>#{table}</table>"
@@ -73,10 +81,11 @@ $ ->
     refresh()
 
     down = ->
-        t.clean()
-        t.block_move_down()
-        t.show_block()
-        refresh()
+        unless t.touch_bottom()
+            t.clean()
+            t.block_move_down()
+            t.show_block()
+            refresh()
 
     left = ->
         unless t.touch_left_wall()
