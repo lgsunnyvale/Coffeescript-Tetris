@@ -77,13 +77,19 @@ class Tetris
                 result = false
         result
 
+    any_row_to_kill: ->
+        result = new Array
+        for row in [0...@height]
+            row_sum = 0
+            for col in [0...@width]
+                row_sum = row_sum + @array[row*@width+col]
+            if row_sum == 2*@width
+                result.push(row)
+        result
+
 $ ->
 
     t = new Tetris(5,5)
-
-    # to be removed, just for test
-    for jtem in [t.width*t.height-4 ... t.width*t.height]
-        t.array[jtem] = 2
 
     refresh = ->
        row=""
@@ -104,6 +110,8 @@ $ ->
        $("#frame").html "<table>#{table}</table>"
 
     t.show_block()
+    for jtem in [t.width*t.height-4 ... t.width*t.height]
+        t.array[jtem] = 2
     refresh()
 
     down = ->
@@ -135,4 +143,5 @@ $ ->
     $("#down_btn").click down
     $("#left_btn").click left
     $("#right_btn").click right
+
 

@@ -1,5 +1,10 @@
+<head>
 <script src="jquery-1.6.4.min.js" type="text/javascript" charset="utf-8"></script>
-<script type="text/javascript" src="javascripts/tetris.js" charset="utf-8"></script>
+<script type="text/javascript" src="javascripts/tetris.js"
+charset="utf-8"></script>
+<script type="text/javascript"
+src="http://code.jquery.com/qunit/git/qunit.js"></script>
+
 <style type="text/css" media="screen">
 	td.cell{
 		background-color : black;
@@ -15,8 +20,9 @@
                 border: 1px
         }
 </style>
-
-
+<link rel="stylesheet" href="http://code.jquery.com/qunit/git/qunit.css" type="text/css" media="screen" />
+</head>
+<body>
 <input type="text" name="width" value="" id="width">
 <input type="text" name="height" value="" id="height">
 <input type="button" name="down_btn" value="down" id="down_btn">
@@ -24,3 +30,11 @@
 <input type="button" name="right_btn" value="right" id="right_btn">  
 <input type="text" name="debug" value="" id="debug">
 <div id="frame"> </div>
+
+<h1 id="qunit-header">QUnit example</h1>
+<h2 id="qunit-banner"></h2>
+<div id="qunit-testrunner-toolbar"></div>
+<h2 id="qunit-userAgent"></h2>
+<ol id="qunit-tests"></ol>
+<div id="qunit-fixture">test markup, will be hidden</div>
+</body>
