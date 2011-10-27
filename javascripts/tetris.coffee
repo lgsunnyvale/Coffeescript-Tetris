@@ -91,6 +91,17 @@ class Tetris
         for item in [n*@width ... (n+1)*@width]
             @array[item]=0
 
+    drop_block_unit: (n) ->
+        if @array[n]==2
+            @array[n]=0
+            @array[n+@width]=2
+
+    dead_blocks_above: (n) ->
+        result = new Array
+        for item in [0 ... n*@width]
+            result.push(item) if @array[item] == 2
+        result
+
 $ ->
 
     t = new Tetris(5,5)
@@ -147,6 +158,7 @@ $ ->
     $("#left_btn").click left
     $("#right_btn").click right
 
+    # start testing now
     test "kill a row", ->
         tt = new Tetris 3,3
         tt.array = [0,0,0,0,0,0,2,2,2]
@@ -155,3 +167,19 @@ $ ->
         equal tt.array[7], 0, "the row is zero-ed after killing a row"
         equal tt.array[8], 0, "the row is zero-ed after killing a row"
         equal tt.array.length, 9, "make sure length is right"
+
+    test "drop a unit block", ->
+        tt = new Tetris 3,3
+        tt.array = [0,0,0,0,0,0,2,2,2]
+        tt.drop_block_unit 5
+        equal tt.array[5], 0, "the block unit should have dropped below"
+        equal tt.array[6], 2, "the row is zero-ed after killing a row"
+        equal tt.array[7], 2, "the row is zero-ed after killing a row"
+        equal tt.array[8], 2, "the block unit should appear here"
+
+    test "find out all deadblocks above", ->
+        tt = new Tetris 3,3
+        tt.array = [0,0,0,2,2,0,0,0,0]
+        equal tt.dead_blocks_above(2)[0], 3, "it should return the index of all deadblocks above"
+        equal tt.dead_blocks_above(2)[1], 4, "it should return the index of all deadblocks above"
+        equal tt.dead_blocks_above(2).length, 2, "it should return the index of all deadblocks above"
