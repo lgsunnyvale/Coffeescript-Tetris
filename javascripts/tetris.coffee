@@ -91,15 +91,21 @@ class Tetris
         for item in [n*@width ... (n+1)*@width]
             @array[item]=0
 
-    drop_block_unit: (n) ->
-        if @array[n]==2
-            @array[n]=0
-            @array[n+@width]=2
+    drop_block_unit: (m) ->
+        if @array[m]==2
+            @array[m]=0
+            @array[m+@width]=2
 
     dead_blocks_above: (n) ->
         result = new Array
         for item in [0 ... n*@width]
             result.push(item) if @array[item] == 2
+        result
+
+    drop_all_dead_blocks_above_row: (n) ->
+        for item in this.dead_blocks_above(n)
+            this.drop_block_unit item
+            result = true
         result
 
 $ ->
@@ -157,6 +163,7 @@ $ ->
     $("#down_btn").click down
     $("#left_btn").click left
     $("#right_btn").click right
+    $("#erase_bottom").click erase_bottom
 
     # start testing now
     test "kill a row", ->
@@ -183,3 +190,12 @@ $ ->
         equal tt.dead_blocks_above(2)[0], 3, "it should return the index of all deadblocks above"
         equal tt.dead_blocks_above(2)[1], 4, "it should return the index of all deadblocks above"
         equal tt.dead_blocks_above(2).length, 2, "it should return the index of all deadblocks above"
+
+    test "drop all deadblocks above", ->
+        tt = new Tetris 3,3
+        tt.array = [0,0,0,2,2,0,0,0,0]
+        equal tt.drop_all_dead_blocks_above_row(2), true, "it should successfully drop all dead blocks above"
+        equal tt.array[6], 2, "it should revise the array property"
+        equal tt.array[7], 2, "it should revise the array property"
+        equal tt.array[8], 0, "it should revise the array property"
+        equal tt.array.length, 9, "it should revise the array property"
