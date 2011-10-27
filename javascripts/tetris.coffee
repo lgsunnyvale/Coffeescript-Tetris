@@ -87,6 +87,10 @@ class Tetris
                 result.push(row)
         result
 
+    kill_row: (n) ->
+        for item in [n*@width ... (n+1)*@width]
+            @array[item]=0
+
 $ ->
 
     t = new Tetris(5,5)
@@ -143,4 +147,11 @@ $ ->
     $("#left_btn").click left
     $("#right_btn").click right
 
-
+    test "kill a row", ->
+        tt = new Tetris 3,3
+        tt.array = [0,0,0,0,0,0,2,2,2]
+        tt.kill_row(2)
+        equal tt.array[6], 0, "the row is zero-ed after killing a row"
+        equal tt.array[7], 0, "the row is zero-ed after killing a row"
+        equal tt.array[8], 0, "the row is zero-ed after killing a row"
+        equal tt.array.length, 9, "make sure length is right"
