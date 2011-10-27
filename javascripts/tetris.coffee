@@ -9,6 +9,7 @@ class Tetris
         @tetris_block  = [@wedge, @square, @stick, @twist]
         @current_block_type = this.block_type_factory()
         @current_block = this.current_block_factory()
+        @dead_block = [@width*(@height-1) ... @width*@height]
 
     array_factory: ->
         @array = (0 for item in [0...@width*@height])
@@ -23,10 +24,9 @@ class Tetris
         array_item for array_item in this.array
 
     clean: ->
-        @array = (0 for item in [0...@width*@height])
-        # to be removed, just for test
-        for jtem in [this.width*this.height-4 ... this.width*this.height]
-            this.array[jtem] = 2
+        this.array_factory()
+        for item in @dead_block
+            @array[item]=2
 
     block_move_down:  ->
         @current_block = ((item + this.width) for item in @current_block)
@@ -109,9 +109,8 @@ $ ->
            row=""
        $("#frame").html "<table>#{table}</table>"
 
+    t.clean()
     t.show_block()
-    for jtem in [t.width*t.height-4 ... t.width*t.height]
-        t.array[jtem] = 2
     refresh()
 
     down = ->
