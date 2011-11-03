@@ -68,11 +68,10 @@ class Tetris
     solidify: ->
         for item in this.current_block
             @dead_block.push item
-        this.clear_current_block()
-        this.generate_another_block()
 
     generate_another_block: ->
-        alert "generating new block"
+        @current_block_type = this.block_type_factory()
+        @current_block = this.current_block_factory()
 
     clear_current_block: ->
         for item in @current_block
@@ -153,6 +152,8 @@ $ ->
                 refresh()
             else
                 t.solidify()
+                t.clear_current_block()
+                t.generate_another_block()
                 t.clean()
                 t.show_block()
                 refresh()
