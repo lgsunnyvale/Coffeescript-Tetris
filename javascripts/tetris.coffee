@@ -9,7 +9,7 @@ class Tetris
         @tetris_block  = [@wedge, @square, @stick, @twist]
         @current_block_type = this.block_type_factory()
         @current_block = this.current_block_factory()
-        @dead_block = [@width*(@height-1) ... @width*@height]
+        @dead_block = [@width*(@height-1)+1 ... @width*@height]
 
     array_factory: ->
         @array = (0 for item in [0...@width*@height])
@@ -67,7 +67,17 @@ class Tetris
 
     solidify: ->
         for item in this.current_block
-            @array[item] = 2
+            @dead_block.push item
+        this.clear_current_block()
+        this.generate_another_block()
+
+    generate_another_block: ->
+        alert "generating new block"
+
+    clear_current_block: ->
+        for item in @current_block
+            @array[item]=0
+        @current_block=[]
 
     touch_dead_block: ->
         for item in @current_block
@@ -142,8 +152,9 @@ $ ->
                 t.show_block()
                 refresh()
             else
-                t.clean()
                 t.solidify()
+                t.clean()
+                t.show_block()
                 refresh()
 
     left = ->
