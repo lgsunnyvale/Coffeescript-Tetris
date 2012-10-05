@@ -31,11 +31,14 @@ class Tetris
     block_move_down:  ->
         @current_block = ((item + this.width) for item in @current_block)
 
-    block_move_left: (block) ->
-        @current_block = ((item - 1) for item in @current_block)
+    block_move_left:  ->
+        unless this.touch_left_wall()
+            @current_block = ((item - 1) for item in @current_block)
+        # console.log(item) for item in @current_block
 
-    block_move_right: (block) ->
-        @current_block = ((item + 1) for item in @current_block)
+    block_move_right: ->
+        unless this.touch_right_wall()
+            @current_block = ((item + 1) for item in @current_block)
 
     show_block: ->
         for item in this.current_block
@@ -43,10 +46,10 @@ class Tetris
 
     touch_left_wall: ->
         for item in @current_block
-            if ((item % @width) == 1)
-                result = true
+            if ((item % @width) == 0)
+                return true
             else
-                result = false
+                return false
         result
 
     touch_right_wall: ->
@@ -81,10 +84,9 @@ class Tetris
     touch_dead_block: ->
         for item in @current_block
             if @array[item + @height] == 2
-                result = true
+                return true
             else
-                result = false
-        result
+                return false
 
     any_row_to_kill: ->
         result = new Array
@@ -119,7 +121,7 @@ class Tetris
 
 $ ->
 
-    t = new Tetris(5,5)
+    t = new Tetris(5,10)
 
     refresh = ->
        row=""
@@ -173,41 +175,51 @@ $ ->
             refresh()
 
     $("#down_btn").click down
+
     $("#left_btn").click left
     $("#right_btn").click right
     $("#erase_bottom").click erase_bottom
+    
+    $(document).keydown (e) ->
+        switch e.which
+            when 37 then left
+            when 39 then right
+            when 40 then down
+            else return; 
+        e.preventDefault()
 
-    # start testing now
-    test "kill a row", ->
-        tt = new Tetris 3,3
-        tt.array = [0,0,0,0,0,0,2,2,2]
-        tt.kill_row(2)
-        equal tt.array[6], 0, "the row is zero-ed after killing a row"
-        equal tt.array[7], 0, "the row is zero-ed after killing a row"
-        equal tt.array[8], 0, "the row is zero-ed after killing a row"
-        equal tt.array.length, 9, "make sure length is right"
 
-    test "drop a unit block", ->
-        tt = new Tetris 3,3
-        tt.array = [0,0,0,0,0,0,2,2,2]
-        tt.drop_block_unit 5
-        equal tt.array[5], 0, "the block unit should have dropped below"
-        equal tt.array[6], 2, "the row is zero-ed after killing a row"
-        equal tt.array[7], 2, "the row is zero-ed after killing a row"
-        equal tt.array[8], 2, "the block unit should appear here"
-
-    test "find out all deadblocks above", ->
-        tt = new Tetris 3,3
-        tt.array = [0,0,0,2,2,0,0,0,0]
-        equal tt.dead_blocks_above(2)[0], 3, "it should return the index of all deadblocks above"
-        equal tt.dead_blocks_above(2)[1], 4, "it should return the index of all deadblocks above"
-        equal tt.dead_blocks_above(2).length, 2, "it should return the index of all deadblocks above"
-
-    test "drop all deadblocks above", ->
-        tt = new Tetris 3,3
-        tt.array = [0,0,0,2,2,0,0,0,0]
-        equal tt.drop_all_dead_blocks_above_row(2), true, "it should successfully drop all dead blocks above"
-        equal tt.array[6], 2, "it should revise the array property"
-        equal tt.array[7], 2, "it should revise the array property"
-        equal tt.array[8], 0, "it should revise the array property"
-        equal tt.array.length, 9, "it should revise the array property"
+    # # start testing now
+    # test "kill a row", ->
+    #     tt = new Tetris 3,3
+    #     tt.array = [0,0,0,0,0,0,2,2,2]
+    #     tt.kill_row(2)
+    #     equal tt.array[6], 0, "the row is zero-ed after killing a row"
+    #     equal tt.array[7], 0, "the row is zero-ed after killing a row"
+    #     equal tt.array[8], 0, "the row is zero-ed after killing a row"
+    #     equal tt.array.length, 9, "make sure length is right"
+    # 
+    # test "drop a unit block", ->
+    #     tt = new Tetris 3,3
+    #     tt.array = [0,0,0,0,0,0,2,2,2]
+    #     tt.drop_block_unit 5
+    #     equal tt.array[5], 0, "the block unit should have dropped below"
+    #     equal tt.array[6], 2, "the row is zero-ed after killing a row"
+    #     equal tt.array[7], 2, "the row is zero-ed after killing a row"
+    #     equal tt.array[8], 2, "the block unit should appear here"
+    # 
+    # test "find out all deadblocks above", ->
+    #     tt = new Tetris 3,3
+    #     tt.array = [0,0,0,2,2,0,0,0,0]
+    #     equal tt.dead_blocks_above(2)[0], 3, "it should return the index of all deadblocks above"
+    #     equal tt.dead_blocks_above(2)[1], 4, "it should return the index of all deadblocks above"
+    #     equal tt.dead_blocks_above(2).length, 2, "it should return the index of all deadblocks above"
+    # 
+    # test "drop all deadblocks above", ->
+    #     tt = new Tetris 3,3
+    #     tt.array = [0,0,0,2,2,0,0,0,0]
+    #     equal tt.drop_all_dead_blocks_above_row(2), true, "it should successfully drop all dead blocks above"
+    #     equal tt.array[6], 2, "it should revise the array property"
+    #     equal tt.array[7], 2, "it should revise the array property"
+    #     equal tt.array[8], 0, "it should revise the array property"
+    #     equal tt.array.length, 9, "it should revise the array property"
