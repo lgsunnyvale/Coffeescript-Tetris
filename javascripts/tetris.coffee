@@ -63,10 +63,9 @@ class Tetris
     touch_bottom: ->
         for item in @current_block
             if item >= (@width * (@height - 1))
-                result = true
+                return true
             else
-                result = false
-        result
+                return false
 
     solidify: ->
         for item in this.current_block
