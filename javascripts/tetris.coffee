@@ -79,10 +79,9 @@ class Tetris
 
     touch_dead_block: ->
         for item in @current_block
-            if @array[item + @height] == 2
+            if @array[item + @width] == 2
                 return true
-            else
-                return false
+        return false
 
     any_row_to_kill: ->
         result = new Array
