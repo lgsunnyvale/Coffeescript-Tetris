@@ -142,19 +142,16 @@ $ ->
     refresh()
 
     down = ->
-        unless t.touch_bottom()
-            unless t.touch_dead_block()
-                t.clean()
-                t.block_move_down()
-                t.show_block()
-                refresh()
-            else
-                t.solidify()
-                t.clear_current_block()
-                t.generate_another_block()
-                t.clean()
-                t.show_block()
-                refresh()
+        if t.touch_bottom() or t.touch_dead_block()
+            t.solidify()
+            t.clear_current_block()
+            t.generate_another_block()
+            t.clean()
+        else
+            t.clean()
+            t.block_move_down()
+        t.show_block()
+        refresh()    
 
     left = ->
         unless t.touch_left_wall()
