@@ -9,7 +9,7 @@ class Tetris
         @tetris_block  = [@wedge, @square, @stick, @twist]
         @current_block_type = this.block_type_factory()
         @current_block = this.current_block_factory()
-        @dead_block = [@width*(@height-1)+1 ... @width*@height]
+        @dead_block = []
 
     array_factory: ->
         @array = (0 for item in [0...@width*@height])
@@ -48,10 +48,8 @@ class Tetris
         for item in @current_block
             if ((item % @width) == 0)
                 return true
-            else
-                return false
-        result
-
+        return false;
+        
     touch_right_wall: ->
         for item in @current_block
             if (item % @width == (@width-1))
@@ -64,8 +62,7 @@ class Tetris
         for item in @current_block
             if item >= (@width * (@height - 1))
                 return true
-            else
-                return false
+        return false
 
     solidify: ->
         for item in this.current_block
