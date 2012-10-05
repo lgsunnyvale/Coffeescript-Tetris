@@ -182,9 +182,9 @@ $ ->
     
     $(document).keydown (e) ->
         switch e.which
-            when 37 then left
-            when 39 then right
-            when 40 then down
+            when 37 then left()
+            when 39 then right()
+            when 40 then down()
             else return; 
         e.preventDefault()
 
