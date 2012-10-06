@@ -269,13 +269,20 @@ $ ->
         t.rotate()
         t.show_block()
         refresh()
-
+    
+    pause_status = 0
     $(document).keydown (e) ->
         switch e.which
             when 37 then left()
             when 38 then rotate()
             when 39 then right()
             when 40 then down()
+            when 32 
+                if pause_status==0
+                    pause()
+                else
+                    resume()
+                pause_status = ~pause_status
             else return; 
         e.preventDefault()
     
@@ -283,7 +290,13 @@ $ ->
     t.show_block()
     refresh()
     
-    setInterval down, 1000
+    timer = setInterval down, 1000
+    
+    pause = ->
+        clearInterval timer
+    
+    resume = ->
+        timer = setInterval down, 1000
 
 # start testing now
     test "scan lines to kill", ->
