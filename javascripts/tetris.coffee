@@ -13,7 +13,14 @@ class Tetris
         @current_block_type = this.block_type_factory()
         @current_block = this.current_block_factory()
         @dead_block = []
-
+        
+    reset: ->
+        @array = this.array_factory
+        @current_rotation_code = 0
+        @current_block_type = this.block_type_factory()
+        @current_block = this.current_block_factory()
+        @dead_block = []
+    
     get_array: ->
         return @array
     
@@ -186,7 +193,12 @@ class Tetris
     generate_another_block: ->
         @current_block_type = this.block_type_factory()
         @current_block = this.current_block_factory()
-        @current_rotation_code=0
+        if this.touch_dead_block()
+            alert("game over!")
+            return false
+        else
+            @current_rotation_code=0
+            return true
 
     clear_current_block: ->
         for item in @current_block
@@ -221,17 +233,15 @@ $ ->
            row=""
        $("#frame").html "<table>#{table}</table>"
 
-    t.clean()
-    t.show_block()
-    refresh()
-
     down = ->
         
         if t.touch_bottom() or t.touch_dead_block()
             t.solidify()
             t.clear_current_block()
-            t.generate_another_block()
-            t.clean()
+            unless t.generate_another_block()
+                t.reset()
+            else
+                t.clean()
         else
             t.clean()
             t.block_move_down()
@@ -268,6 +278,12 @@ $ ->
             when 40 then down()
             else return; 
         e.preventDefault()
+    
+    t.clean()
+    t.show_block()
+    refresh()
+    
+    setInterval down, 1000
 
 # start testing now
     test "scan lines to kill", ->
