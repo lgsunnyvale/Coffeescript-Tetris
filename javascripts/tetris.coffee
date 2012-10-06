@@ -9,6 +9,7 @@ class Tetris
         @spear         = [@mid, @mid+@width, @mid+2*@width, @mid+3*@width]
         @twist         = [@mid, @mid+@width, @mid+@width+1, @mid+@width+1+@width]
         @tetris_block  = [@wedge, @square, @stick, @twist,@spear]
+        @current_rotation_code = 0
         @current_block_type = this.block_type_factory()
         @current_block = this.current_block_factory()
         @dead_block = []
@@ -57,7 +58,7 @@ class Tetris
             for j in [i*@width...(i+1)*@width]
                 @array[j]=0
                 @dead_block.splice(index, 1) for index, value of @dead_block when value == j
-                console.log @dead_block
+                # console.log @dead_block
             for k in [i*@width-1..0] by -1
                 for item,index in @dead_block
                     if item==k 
@@ -76,7 +77,84 @@ class Tetris
     block_move_right: ->
         unless this.touch_right_wall()
             @current_block = ((item + 1) for item in @current_block)
-
+    
+    rotate: ->
+        @current_rotation_code = (@current_rotation_code + 1) % 4
+        switch @current_block_type
+            when 0 then this.wedge_rotate()
+            when 1 then this.square_rotate()
+            when 2 then this.stick_rotate()
+            when 3 then this.twist_rotate()
+            when 4 then this.spear_rotate()
+            else console.log "error in find block type"
+            
+    wedge_rotate: ->
+        switch @current_rotation_code
+            when 1
+                @current_block[2] = @current_block[1] + @width
+            when 2     
+                @current_block[0] = @current_block[1] +  - 1
+            when 3
+                @current_block[3] = @current_block[1] - @width
+            when 0
+                @current_block[2] = @current_block[1] + 1
+                [@current_block[0], @current_block[3]] = [@current_block[3], @current_block[0]]
+                [@current_block[2], @current_block[3]] = [@current_block[3], @current_block[2]]
+        
+    square_rotate: ->
+        return
+    
+    stick_rotate: ->
+        switch @current_rotation_code
+            when 1
+                @current_block[3] = @current_block[0] + 1
+                @current_block[2] = @current_block[1] + @width
+            when 2     
+                @current_block[2] = @current_block[0] - 1
+                @current_block[3] = @current_block[2] - 1
+            when 3
+                @current_block[1] = @current_block[0] + 1
+                @current_block[2] = @current_block[1] - @width
+                @current_block[3] = @current_block[2] - @width
+            when 0
+                @current_block[1] = @current_block[0] + @width
+                @current_block[2] = @current_block[1] + 1
+                @current_block[3] = @current_block[2] + 1
+    
+    twist_rotate: ->
+        switch @current_rotation_code
+            when 1
+                @current_block[3] = @current_block[1] + @width
+                @current_block[0] = @current_block[3] - 1
+            when 2     
+                @current_block[0] = @current_block[1] - @width
+                @current_block[3] = @current_block[2] + @width
+            when 3
+                @current_block[3] = @current_block[1] + @width
+                @current_block[0] = @current_block[3] - 1
+            when 0
+                @current_block[0] = @current_block[1] - @width
+                @current_block[3] = @current_block[2] + @width
+    
+    spear_rotate: ->
+        switch @current_rotation_code
+            when 1
+                @current_block[1] = @current_block[2] - 1
+                @current_block[0] = @current_block[1] - 1
+                @current_block[3] = @current_block[2] + 1
+            when 2     
+                @current_block[1] = @current_block[2] - @width
+                @current_block[0] = @current_block[1] - @width
+                @current_block[3] = @current_block[2] + @width
+            when 3
+                @current_block[1] = @current_block[2] - 1
+                @current_block[0] = @current_block[1] - 1
+                @current_block[3] = @current_block[2] + 1
+            when 0
+                @current_block[1] = @current_block[2] - @width
+                @current_block[0] = @current_block[1] - @width
+                @current_block[3] = @current_block[2] + @width
+        
     show_block: ->
         for item in this.current_block
             this.array[item] = 1
@@ -108,6 +186,7 @@ class Tetris
     generate_another_block: ->
         @current_block_type = this.block_type_factory()
         @current_block = this.current_block_factory()
+        @current_rotation_code=0
 
     clear_current_block: ->
         for item in @current_block
@@ -119,10 +198,10 @@ class Tetris
             if @array[item + @width] == 2
                 return true
         return false
-
+    
 $ ->
 
-    t = new Tetris(5,10)
+    t = new Tetris(10,10)
 
     refresh = ->
        row=""
@@ -159,9 +238,7 @@ $ ->
 
         t.kill_lines(t.scan_killable_lines())
         t.show_block()
-        refresh()    
-
-        console.log t.get_deadblock()
+        refresh()
 
     left = ->
         unless t.touch_left_wall()
@@ -176,15 +253,17 @@ $ ->
             t.block_move_right()
             t.show_block()
             refresh()
+            
+    rotate = ->
+        t.clean()
+        t.rotate()
+        t.show_block()
+        refresh()
 
-    $("#down_btn").click down
-    $("#left_btn").click left
-    $("#right_btn").click right
-    $("#erase_bottom").click erase_bottom
-    
     $(document).keydown (e) ->
         switch e.which
             when 37 then left()
+            when 38 then rotate()
             when 39 then right()
             when 40 then down()
             else return; 
