@@ -219,18 +219,18 @@ class Tetris
             this.array[item] = 1
 
     touch_left_wall: ->
+        # also find if touch any deadblocks to the left. quick and dirty fix. need rework.
         for item in @current_block
-            if ((item % @width) == 0)
+            if ((item % @width) == 0 || @array[item-1]==2)
                 return true
         return false;
         
     touch_right_wall: ->
+        # also find if touch any deadblocks to the left. quick and dirty fix. need rework.
         for item in @current_block
-            if (item % @width == (@width-1))
-                result = true
-            else
-                result = false
-        result
+            if (item % @width == (@width-1) || @array[item+1]==2)
+                return true
+        return false
 
     touch_bottom: ->
         for item in @current_block
