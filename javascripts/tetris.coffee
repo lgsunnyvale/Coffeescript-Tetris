@@ -126,14 +126,14 @@ class Tetris
     stick_rotate: ->
         switch @current_rotation_code
             when 1
-                if this.touch_bottom()
+                if this.touch_bottom() 
                     @current_rotation_code-=1
                     return
                 else
                     @current_block[3] = @current_block[0] + 1
                     @current_block[2] = @current_block[1] + @width
             when 2
-                if 2 in (@array[j] for j in (i-1 for i in @current_block[0..2]))
+                if 2 in (@array[j] for j in (i-1 for i in @current_block[0..2])) || (@current_block[0] % @width < 2)
                     @current_rotation_code-=1
                     return
                 else
@@ -148,7 +148,7 @@ class Tetris
                     @current_block[2] = @current_block[1] - @width
                     @current_block[3] = @current_block[2] - @width
             when 0
-                if this.touch_bottom() or 2 in (@array[j] for j in (i+1 for i in @current_block[0..3]))
+                if this.touch_bottom() or 2 in (@array[j] for j in (i+1 for i in @current_block[0..3])) || (@current_block[1] % @width == (@width - 1))
                     @current_rotation_code-=1
                     return
                 else
@@ -182,7 +182,7 @@ class Tetris
     spear_rotate: ->
         switch @current_rotation_code
             when 1
-                if (2 in (@array[j] for j in (i+1 for i in @current_block[0..3]))) or (2 in (@array[j] for j in (i-1 for i in @current_block[0..3])))
+                if (2 in (@array[j] for j in (i+1 for i in @current_block[0..3]))) or (2 in (@array[j] for j in (i-1 for i in @current_block[0..3]))) || (@current_block[0] % @width < 2) || (@current_block[0] % @width == (@width - 1))
                     @current_rotation_code-=1
                     return
                 else
@@ -198,7 +198,7 @@ class Tetris
                     @current_block[0] = @current_block[1] - @width
                     @current_block[3] = @current_block[2] + @width
             when 3
-                if (2 in (@array[j] for j in (i+1 for i in @current_block[0..3]))) or (2 in (@array[j] for j in (i-1 for i in @current_block[0..3])))
+                if (2 in (@array[j] for j in (i+1 for i in @current_block[0..3]))) or (2 in (@array[j] for j in (i-1 for i in @current_block[0..3])))|| (@current_block[0] % @width < 2) || (@current_block[0] % @width == (@width - 1))
                     @current_rotation_code-=1
                     return
                 else
