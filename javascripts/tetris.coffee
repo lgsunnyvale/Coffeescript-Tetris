@@ -114,19 +114,35 @@ class Tetris
     stick_rotate: ->
         switch @current_rotation_code
             when 1
-                @current_block[3] = @current_block[0] + 1
-                @current_block[2] = @current_block[1] + @width
-            when 2     
-                @current_block[2] = @current_block[0] - 1
-                @current_block[3] = @current_block[2] - 1
+                if this.touch_bottom()
+                    @current_rotation_code-=1
+                    return
+                else
+                    @current_block[3] = @current_block[0] + 1
+                    @current_block[2] = @current_block[1] + @width
+            when 2
+                if 2 in (@array[j] for j in (i-1 for i in @current_block[0..2]))
+                    @current_rotation_code-=1
+                    return
+                else
+                    @current_block[2] = @current_block[0] - 1
+                    @current_block[3] = @current_block[2] - 1
             when 3
-                @current_block[1] = @current_block[0] + 1
-                @current_block[2] = @current_block[1] - @width
-                @current_block[3] = @current_block[2] - @width
+                if 2 in (@array[j] for j in (i+1 for i in @current_block[0..1]))
+                    @current_rotation_code-=1
+                    return
+                else
+                    @current_block[1] = @current_block[0] + 1
+                    @current_block[2] = @current_block[1] - @width
+                    @current_block[3] = @current_block[2] - @width
             when 0
-                @current_block[1] = @current_block[0] + @width
-                @current_block[2] = @current_block[1] + 1
-                @current_block[3] = @current_block[2] + 1
+                if this.touch_bottom()
+                    @current_rotation_code-=1
+                    return
+                else
+                    @current_block[1] = @current_block[0] + @width
+                    @current_block[2] = @current_block[1] + 1
+                    @current_block[3] = @current_block[2] + 1
     
     twist_rotate: ->
         switch @current_rotation_code
@@ -146,21 +162,37 @@ class Tetris
     spear_rotate: ->
         switch @current_rotation_code
             when 1
-                @current_block[1] = @current_block[2] - 1
-                @current_block[0] = @current_block[1] - 1
-                @current_block[3] = @current_block[2] + 1
-            when 2     
-                @current_block[1] = @current_block[2] - @width
-                @current_block[0] = @current_block[1] - @width
-                @current_block[3] = @current_block[2] + @width
+                if (2 in (@array[j] for j in (i+1 for i in @current_block[0..3]))) or (2 in (@array[j] for j in (i-1 for i in @current_block[0..3])))
+                    @current_rotation_code-=1
+                    return
+                else
+                    @current_block[1] = @current_block[2] - 1
+                    @current_block[0] = @current_block[1] - 1
+                    @current_block[3] = @current_block[2] + 1
+            when 2    
+                if this.touch_bottom()
+                    @current_rotation_code-=1
+                    return
+                else
+                    @current_block[1] = @current_block[2] - @width
+                    @current_block[0] = @current_block[1] - @width
+                    @current_block[3] = @current_block[2] + @width
             when 3
-                @current_block[1] = @current_block[2] - 1
-                @current_block[0] = @current_block[1] - 1
-                @current_block[3] = @current_block[2] + 1
+                if (2 in (@array[j] for j in (i+1 for i in @current_block[0..3]))) or (2 in (@array[j] for j in (i-1 for i in @current_block[0..3])))
+                    @current_rotation_code-=1
+                    return
+                else
+                    @current_block[1] = @current_block[2] - 1
+                    @current_block[0] = @current_block[1] - 1
+                    @current_block[3] = @current_block[2] + 1
             when 0
-                @current_block[1] = @current_block[2] - @width
-                @current_block[0] = @current_block[1] - @width
-                @current_block[3] = @current_block[2] + @width
+                if this.touch_bottom()
+                    @current_rotation_code-=1
+                    return
+                else
+                    @current_block[1] = @current_block[2] - @width
+                    @current_block[0] = @current_block[1] - @width
+                    @current_block[3] = @current_block[2] + @width
         
     show_block: ->
         for item in this.current_block
@@ -213,7 +245,7 @@ class Tetris
     
 $ ->
 
-    t = new Tetris(10,10)
+    t = new Tetris(10,20)
 
     refresh = ->
        row=""
