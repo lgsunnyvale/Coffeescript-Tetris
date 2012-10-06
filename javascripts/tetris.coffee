@@ -98,15 +98,27 @@ class Tetris
     wedge_rotate: ->
         switch @current_rotation_code
             when 1
-                @current_block[2] = @current_block[1] + @width
-            when 2     
-                @current_block[0] = @current_block[1] +  - 1
+                if this.touch_bottom()
+                    @current_rotation_code-=1
+                    return
+                else
+                    @current_block[2] = @current_block[1] + @width
+            when 2
+                if 2 in (@array[j] for j in (i-1 for i in @current_block[0..2]))
+                    @current_rotation_code-=1
+                    return
+                else
+                    @current_block[0] = @current_block[1]  - 1
             when 3
                 @current_block[3] = @current_block[1] - @width
             when 0
-                @current_block[2] = @current_block[1] + 1
-                [@current_block[0], @current_block[3]] = [@current_block[3], @current_block[0]]
-                [@current_block[2], @current_block[3]] = [@current_block[3], @current_block[2]]
+                if 2 in (@array[j] for j in (i+1 for i in @current_block[1..3]))
+                    @current_rotation_code-=1
+                    return
+                else
+                    @current_block[2] = @current_block[1] + 1
+                    [@current_block[0], @current_block[3]] = [@current_block[3], @current_block[0]]
+                    [@current_block[2], @current_block[3]] = [@current_block[3], @current_block[2]]
         
     square_rotate: ->
         return
@@ -128,7 +140,7 @@ class Tetris
                     @current_block[2] = @current_block[0] - 1
                     @current_block[3] = @current_block[2] - 1
             when 3
-                if 2 in (@array[j] for j in (i+1 for i in @current_block[0..1]))
+                if 2 in (@array[j] for j in (i+1 for i in @current_block[0..3]))
                     @current_rotation_code-=1
                     return
                 else
@@ -136,7 +148,7 @@ class Tetris
                     @current_block[2] = @current_block[1] - @width
                     @current_block[3] = @current_block[2] - @width
             when 0
-                if this.touch_bottom()
+                if this.touch_bottom() or 2 in (@array[j] for j in (i+1 for i in @current_block[0..3]))
                     @current_rotation_code-=1
                     return
                 else
@@ -147,14 +159,22 @@ class Tetris
     twist_rotate: ->
         switch @current_rotation_code
             when 1
-                @current_block[3] = @current_block[1] + @width
-                @current_block[0] = @current_block[3] - 1
-            when 2     
+                if 2 in (@array[j] for j in (i+@width for i in @current_block[0..1]))
+                    @current_rotation_code-=1
+                    return
+                else     
+                    @current_block[3] = @current_block[1] + @width
+                    @current_block[0] = @current_block[3] - 1
+            when 2
                 @current_block[0] = @current_block[1] - @width
                 @current_block[3] = @current_block[2] + @width
             when 3
-                @current_block[3] = @current_block[1] + @width
-                @current_block[0] = @current_block[3] - 1
+                if 2 in (@array[j] for j in (i+@width for i in @current_block[0..1]))
+                    @current_rotation_code-=1
+                    return
+                else
+                    @current_block[3] = @current_block[1] + @width
+                    @current_block[0] = @current_block[3] - 1
             when 0
                 @current_block[0] = @current_block[1] - @width
                 @current_block[3] = @current_block[2] + @width
@@ -359,7 +379,6 @@ $ ->
         tt.kill_lines(tt.scan_killable_lines())
         deepEqual tt.get_array(), (0 for i in [0...6]).concat([0,2,0]), "should kill the last two lines"
 
-    # # start testing now
     #         test "kill a row", ->
     #             tt = new Tetris 3,3
     #             tt.array = [0,0,0,0,0,0,2,2,2]
