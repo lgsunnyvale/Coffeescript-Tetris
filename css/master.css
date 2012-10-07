@@ -1,0 +1,22 @@
+table{
+    border-collapse: collapse;
+    border: 0px solid #FF0000;
+}
+
+table td{
+border: 0px solid #FF0000;
+}
+
+td.cell{
+background-color: black;
+}
+
+td.block{
+        background-color: yellow;
+        border: 0px
+}
+
+td.dead_block{
+        background-color: blue;
+        border: 0px
+}

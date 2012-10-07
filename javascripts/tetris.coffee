@@ -265,7 +265,7 @@ class Tetris
     
 $ ->
 
-    t = new Tetris(10,20)
+    t = new Tetris(12,20)
 
     refresh = ->
        row=""
@@ -280,7 +280,7 @@ $ ->
                    cell_css = 'dead_block'
                else
                    cell_css = 'cell'
-               row = row + "<td class=#{cell_css} id=#{n}>#{n}</td>"
+               row = row + "<td class=#{cell_css} id=#{n}>&nbsp&nbsp&nbsp&nbsp</td>"
            table = table + row + "</tr>"
            row=""
        $("#frame").html "<table>#{table}</table>"
@@ -412,4 +412,4 @@ $ ->
     #             equal tt.array[7], 2, "it should revise the array property"
     #             equal tt.array[8], 0, "it should revise the array property"
     #             equal tt.array.length, 9, "it should revise the array property"
-    #     
+    #
