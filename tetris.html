@@ -2,8 +2,8 @@
 <script src="jquery-1.6.4.min.js" type="text/javascript" charset="utf-8"></script>
 <script type="text/javascript" src="javascripts/tetris.js"
 charset="utf-8"></script>
-<script type="text/javascript"
-src="http://code.jquery.com/qunit/git/qunit.js"></script>
+<!-- <script type="text/javascript"
+src="http://code.jquery.com/qunit/git/qunit.js"></script> -->
 <link rel="stylesheet" href="css/master.css" type="text/css" media="screen" title="no title" charset="utf-8">
 <script type="text/javascript" charset="utf-8" src="jquery-1.6.4.min.js"></script>
 
@@ -25,19 +25,11 @@ src="http://code.jquery.com/qunit/git/qunit.js"></script>
 <link rel="stylesheet" href="http://code.jquery.com/qunit/git/qunit.css" type="text/css" media="screen" />
 </head>
 <body>
-<input type="text" name="width" value="" id="width">
-<input type="text" name="height" value="" id="height">
-<input type="button" name="down_btn" value="down" id="down_btn">
-<input type="button" name="left_btn" value="left" id="left_btn">
-<input type="button" name="right_btn" value="right" id="right_btn">
-<input type="button" name="erase_bottom" value="erase me" id="erase_bottom">
-<input type="text" name="debug" value="" id="debug">
-<div id="frame"> </div>
+<div id="container">
+	<div id="frame"> </div>
+	<div id="info">
+		Current Score <span id="score"></span>
+	</div>
+</div>
 
-<h1 id="qunit-header">QUnit example</h1>
-<h2 id="qunit-banner"></h2>
-<div id="qunit-testrunner-toolbar"></div>
-<h2 id="qunit-userAgent"></h2>
-<ol id="qunit-tests"></ol>
-<div id="qunit-fixture">test markup, will be hidden</div>
 </body>

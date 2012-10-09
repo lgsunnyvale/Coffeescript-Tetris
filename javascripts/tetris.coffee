@@ -13,6 +13,7 @@ class Tetris
         @current_block_type = this.block_type_factory()
         @current_block = this.current_block_factory()
         @dead_block = []
+        @current_score=0
         
     reset: ->
         @array = this.array_factory
@@ -55,6 +56,7 @@ class Tetris
                 if j in this.get_deadblock()
                     s+=2
             if s==2*@width
+                @current_score += 10
                 result.push(i)
                 # console.log result
             s=0
@@ -284,6 +286,7 @@ $ ->
            table = table + row + "</tr>"
            row=""
        $("#frame").html "<table>#{table}</table>"
+       $("#score").html(t.current_score)
 
     down = ->
         

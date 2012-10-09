@@ -1,6 +1,9 @@
+body{
+    background-color: black;
+}
 table{
     border-collapse: collapse;
-    border: 0px solid #FF0000;
+    border: 1px solid white;
 }
 
 table td{
@@ -19,4 +22,24 @@ td.block{
 td.dead_block{
         background-color: blue;
         border: 0px
+}
+
+div#container{
+    position:relative;
+    width: 400px;
+    left:50%;
+    margin-left: -200px;
+    margin-top: 50px;
+}
+
+
+div#frame{
+    float:left;
+}
+
+div#info{
+    margin-top: 10px;
+    float:right;
+    font-family: Courier, "Courier New", monospace;
+    color:white;
 }
