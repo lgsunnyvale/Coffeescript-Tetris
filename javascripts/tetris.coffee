@@ -267,7 +267,7 @@ class Tetris
     
 $ ->
 
-    t = new Tetris(12,20)
+    t = new Tetris(10,20)
 
     refresh = ->
        row=""
@@ -355,66 +355,3 @@ $ ->
     resume = ->
         timer = setInterval down, 1000
 
-# start testing now
-    test "scan lines to kill", ->
-        tt = new Tetris 3,3
-        tt.array = [0,0,0,0,0,0,2,2,2]
-        r = tt.scan_killable_lines()
-        deepEqual r, [2], "should find the last line is full to be killed"
-        tt.array = [0,0,0,2,2,2,2,2,2]
-        r = tt.scan_killable_lines()
-        deepEqual r, [1,2], "should find the last two lines is full to be killed"
-        
-    test "find deadblocks", ->
-        tt = new Tetris 3,3
-        tt.array = [0,0,0,0,0,0,2,2,2]
-        d = tt.get_deadblock()
-        deepEqual d, [6,7,8], "should find the last elements are deadblocks"
-        tt.array = [0,0,0,2,2,2,2,2,2]
-        d = tt.get_deadblock()
-        deepEqual d, [3,4,5,6,7,8], "should find the last elements are deadblocks"
-        
-    test "kill lines", ->
-        tt = new Tetris 3,3
-        tt.array = [0,0,0,0,0,0,2,2,2]
-        deepEqual [2], tt.scan_killable_lines(), "should scan right"
-        tt.kill_lines(tt.scan_killable_lines())
-        deepEqual tt.get_array(), (0 for i in [0...9]), "should kill lines"
-        tt.array = [0,2,0,2,2,2,2,2,2]
-        tt.kill_lines(tt.scan_killable_lines())
-        deepEqual tt.get_array(), (0 for i in [0...6]).concat([0,2,0]), "should kill the last two lines"
-
-    #         test "kill a row", ->
-    #             tt = new Tetris 3,3
-    #             tt.array = [0,0,0,0,0,0,2,2,2]
-    #             tt.kill_row(2)
-    #             equal tt.array[6], 0, "the row is zero-ed after killing a row"
-    #             equal tt.array[7], 0, "the row is zero-ed after killing a row"
-    #             equal tt.array[8], 0, "the row is zero-ed after killing a row"
-    #             equal tt.array.length, 9, "make sure length is right"
-    #         
-    #         test "drop a unit block", ->
-    #             tt = new Tetris 3,3
-    #             tt.array = [0,0,0,0,0,0,2,2,2]
-    #             tt.drop_block_unit 5
-    #             equal tt.array[5], 0, "the block unit should have dropped below"
-    #             equal tt.array[6], 2, "the row is zero-ed after killing a row"
-    #             equal tt.array[7], 2, "the row is zero-ed after killing a row"
-    #             equal tt.array[8], 2, "the block unit should appear here"
-    #         
-    #         test "find out all deadblocks above", ->
-    #             tt = new Tetris 3,3
-    #             tt.array = [0,0,0,2,2,0,0,0,0]
-    #             equal tt.dead_blocks_above(2)[0], 3, "it should return the index of all deadblocks above"
-    #             equal tt.dead_blocks_above(2)[1], 4, "it should return the index of all deadblocks above"
-    #             equal tt.dead_blocks_above(2).length, 2, "it should return the index of all deadblocks above"
-    #         
-    #         test "drop all deadblocks above", ->
-    #             tt = new Tetris 3,3
-    #             tt.array = [0,0,0,2,2,0,0,0,0]
-    #             equal tt.drop_all_dead_blocks_above_row(2), true, "it should successfully drop all dead blocks above"
-    #             equal tt.array[6], 2, "it should revise the array property"
-    #             equal tt.array[7], 2, "it should revise the array property"
-    #             equal tt.array[8], 0, "it should revise the array property"
-    #             equal tt.array.length, 9, "it should revise the array property"
-    #

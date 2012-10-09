@@ -42,4 +42,5 @@ div#info{
     float:right;
     font-family: Courier, "Courier New", monospace;
     color:white;
+    line-height: 20px;
 }
