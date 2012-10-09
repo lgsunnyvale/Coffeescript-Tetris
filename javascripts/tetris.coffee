@@ -323,12 +323,13 @@ $ ->
         refresh()
     
     pause_status = 0
+    
     $(document).keydown (e) ->
         switch e.which
-            when 37 then left()
-            when 38 then rotate()
-            when 39 then right()
-            when 40 then down()
+            when 37 then left() if pause_status==0 
+            when 38 then rotate() if pause_status==0 
+            when 39 then right() if pause_status==0 
+            when 40 then down() if pause_status==0 
             when 32 
                 if pause_status==0
                     pause()
@@ -346,6 +347,7 @@ $ ->
     
     pause = ->
         clearInterval timer
+        
     
     resume = ->
         timer = setInterval down, 1000
