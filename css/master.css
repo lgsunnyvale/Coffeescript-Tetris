@@ -32,15 +32,14 @@ div#container{
     margin-top: 50px;
 }
 
-
 div#frame{
     float:left;
 }
 
 div#info{
+    line-height: 20px;
     margin-top: 10px;
+    color:white;
     float:right;
     font-family: Courier, "Courier New", monospace;
-    color:white;
-    line-height: 20px;
 }

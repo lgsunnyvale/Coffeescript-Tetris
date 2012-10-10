@@ -14,12 +14,16 @@ class Tetris
         @current_block = this.current_block_factory()
         @dead_block = []
         @current_score=0
+        @next_block_type = this.block_type_factory()
+        @next_block = this.next_block_factory()
         
     reset: ->
         @array = this.array_factory
         @current_rotation_code = 0
         @current_block_type = this.block_type_factory()
         @current_block = this.current_block_factory()
+        @next_block_type = this.block_type_factory()
+        @next_block = this.next_block_factory()
         @dead_block = []
     
     get_array: ->
@@ -38,7 +42,10 @@ class Tetris
 
     current_block_factory: ->
         this.tetris_block[this.current_block_type]
-
+    
+    next_block_factory: ->
+        this.tetris_block[this.next_block_type]
+    
     to_s: ->
         array_item for array_item in this.array
 
@@ -245,8 +252,10 @@ class Tetris
             @dead_block.push item
 
     generate_another_block: ->
-        @current_block_type = this.block_type_factory()
-        @current_block = this.current_block_factory()
+        @current_block_type = @next_block_type
+        @current_block = @next_block
+        @next_block_type = this.block_type_factory()
+        @next_block = this.next_block_factory()
         if this.touch_dead_block()
             alert("game over!")
             return false
@@ -287,6 +296,20 @@ $ ->
            row=""
        $("#frame").html "<table>#{table}</table>"
        $("#score").html(t.current_score)
+       draw_next_block()
+
+    draw_next_block = ->
+        table = "<table style='border-style:none'>"
+        for i in [0...4]
+            table += "<tr>"
+            for j in [0...t.width]
+                table += "<td id=n#{i*(t.width)+j}>&nbsp&nbsp&nbsp&nbsp</td>"
+            table += "</tr>"
+        table += "</table>"
+        $("#next_block").html(table);
+        for item in t.next_block
+            $("#n#{item}").addClass("block")
+            
 
     down = ->
         
